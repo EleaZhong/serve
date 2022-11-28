@@ -5,9 +5,10 @@ BRANCH_NAME="master"
 DOCKER_TAG="pytorch/torchserve:latest-cpu"
 BUILD_TYPE="production"
 DOCKER_FILE="Dockerfile"
-BASE_IMAGE="ubuntu:18.04"
+BASE_IMAGE="ubuntu:20.04"
 CUSTOM_TAG=false
 CUDA_VERSION=""
+UBUNTU_VERSION="ubuntu:20.04"
 USE_LOCAL_SERVE_FOLDER=false
 BUILD_WITH_IPEX=false
 
@@ -40,8 +41,8 @@ do
         -g|--gpu)
           MACHINE=gpu
           DOCKER_TAG="pytorch/torchserve:latest-gpu"
-          BASE_IMAGE="nvidia/cuda:10.2-cudnn8-runtime-ubuntu18.04"
-          CUDA_VERSION="cu102"
+          BASE_IMAGE="nvidia/cuda:11.7.0-cudnn8-runtime-ubuntu20.04"
+          CUDA_VERSION="cu117"
           shift
           ;;
         -bt|--buildtype)
@@ -56,21 +57,28 @@ do
           shift
           ;;
         -lf|--use-local-serve-folder)
-          USE_LOCAL_SERVE_FOLDER=true        
+          USE_LOCAL_SERVE_FOLDER=true
           shift
           ;;
         -ipex|--build-with-ipex)
           BUILD_WITH_IPEX=true
           shift
           ;;
+        # With default ubuntu version 20.04
         -cv|--cudaversion)
           CUDA_VERSION="$2"
-          if [ $CUDA_VERSION == "cu113" ];
+          if [ $CUDA_VERSION == "cu117" ];
           then
-            BASE_IMAGE="nvidia/cuda:11.3.0-cudnn8-runtime-ubuntu18.04"
+            BASE_IMAGE="nvidia/cuda:11.7.0-cudnn8-runtime-ubuntu20.04"
+          elif [ $CUDA_VERSION == "cu116" ];
+          then
+            BASE_IMAGE="nvidia/cuda:11.6.0-cudnn8-runtime-ubuntu20.04"
+          elif [ $CUDA_VERSION == "cu113" ];
+          then
+            BASE_IMAGE="nvidia/cuda:11.3.0-cudnn8-runtime-ubuntu20.04"
           elif [ $CUDA_VERSION == "cu111" ];
           then
-            BASE_IMAGE="nvidia/cuda:11.1-cudnn8-runtime-ubuntu18.04"
+            BASE_IMAGE="nvidia/cuda:11.1.1-cudnn8-runtime-ubuntu20.04"
           elif [ $CUDA_VERSION == "cu102" ];
           then
             BASE_IMAGE="nvidia/cuda:10.2-cudnn8-runtime-ubuntu18.04"
